@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: fastapi_app
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://username:password@db:5432/mydb
+      TABLE_COUNT: 10
+      SEAT_COUNT: 5
+      SEAT_PRICE: 50
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  test_runner:
+    build: .
+    container_name: test_runner
+    depends_on:
+      - api
+    environment:
+      RUNNING_TESTS: "TRUE"
+      PYTHONPATH: "/app/src"
+      DATABASE_URL: postgresql://username:password@db:5432/mydb
+      TABLE_COUNT: 10
+      SEAT_COUNT: 5
+      SEAT_PRICE: 50
+    volumes:
+      - ./src:/app/src 
+    working_dir: /app/src
+    command: ["pytest", "-v"]
+volumes:
+  postgres_data:

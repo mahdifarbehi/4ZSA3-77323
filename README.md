@@ -8,7 +8,7 @@ This project implements a booking system for a restaurant using FastAPI, Postgre
 1. The restaurant has a total of `N = 10` tables.
 2. Each table has `M` seats, where `4 <= M <= 10`.
 3. Customers can book tables based on the number of individuals, and the system will offer the cheapest available option.
-4. Odd-numbered bookings are not allowed unless it exactly matches the table's seat count or remaining seat count of a table. For example, if a customer wants to book for 3 people, the system will assign them 4 seats and calculate the cost based on those 4 seats.
+4. Odd-numbered bookings are not allowed unless it exactly matches the table's seat count. For example, if a customer wants to book for 3 people, the system will assign them 4 seats and calculate the cost based on those 4 seats.
 5. Each seat costs `X` amount. Booking an entire table costs `(M - 1) * X`.
 6. Users must be authenticated to book or cancel a reservation.
 
